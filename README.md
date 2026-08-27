@@ -94,7 +94,7 @@ This project is an end-to-end data analysis solution designed to extract critica
 	 FROM walmart
 	 GROUP BY 1, 2
      ) AS sub
- 	WHERE rnk = 1
+ 		WHERE rnk = 1
  	```
 - Calculate the total quantity of items sold per payment method. List the payment_method and total_quantity.
 ```sql
@@ -102,8 +102,8 @@ This project is an end-to-end data analysis solution designed to extract critica
 	payment_method,
 	-- count(*) as no_payments,
     sum(quantity) as no_qty_sold
-FROM walmart 
-GROUP BY payment_method;
+	FROM walmart 
+	GROUP BY payment_method;
 ```
   
 - Determine the average, minimum and maximum rating of category of each city. List city, average_rating, min_rating and max_rating.
@@ -114,8 +114,8 @@ GROUP BY payment_method;
     MIN(rating) as min_rating,
     MAX(rating) as max_rating,
     AVG(rating) as avg_rating
- FROM walmart
- GROUP BY 1, 2;
+	FROM walmart
+ 	GROUP BY 1, 2;
 ```
 - Calculate the total profit for each category by considering total_profit as (unit_price * Quantity * Profit_margin). List category and total_profit, order from highest to lower profit.
 ```sql
@@ -124,23 +124,23 @@ GROUP BY payment_method;
     SUM(total) as revenue, 
     SUM(total * profit_margin) as profit
     FROM walmart
-GROUP BY 1;
+	GROUP BY 1;
 ```
 - Determine the most common payment method for each Branch. Display Branch and the preferred_payment_method.
 ```sql
 	WITH cte
-AS
-(SELECT
+	AS
+	(SELECT
 	branch,
     payment_method,
     COUNT(*) as total_trans,
 	RANK() OVER(PARTITION BY branch ORDER BY COUNT(*) DESC) as rnk
-FROM walmart
-GROUP BY 1, 2
-)
-SELECT * 
-FROM cte
-WHERE rnk = 1;
+	FROM walmart
+	GROUP BY 1, 2
+	)
+	SELECT * 
+	FROM cte
+	WHERE rnk = 1;
 ```
 - Categorize sales into 3 group MORNING, EVENING, AFTERNOON. Find out which of the shift and number of invoices.alter
 ```sql
@@ -152,9 +152,9 @@ WHERE rnk = 1;
         ELSE 'Evening'
 	END day_time,
     COUNT(*)
-FROM walmart
-GROUP BY 1, 2
-ORDER BY 1, 3 DESC;
+	FROM walmart
+	GROUP BY 1, 2
+	ORDER BY 1, 3 DESC;
 ```
 
 ### 10. Project Publishing and Documentation
