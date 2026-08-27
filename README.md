@@ -55,16 +55,15 @@ This project is an end-to-end data analysis solution designed to extract critica
 
 ### 9. SQL Analysis: Complex Queries and Business Problem Solving
    - **Business Problem-Solving**: Write and execute complex SQL queries to answer critical business questions, such as:
-     - Revenue trends across branches and categories.
+     - Find the different payment method and number of transactions and Number of Quantity sold.
     
    ```sql
-     - SELECT payment_method,
+   	SELECT payment_method,
 	count(*) as no_payments,
     sum(quantity) as no_qty_sold
  FROM walmart GROUP BY payment_method;
    ```
-`	- Identifying best-selling product categories.
-	
+`	- Identify the highest rated category in each branch, displaying the branch, category, Avg Rating
 ```sql
 	SELECT * FROM(
 	SELECT 
@@ -80,10 +79,83 @@ This project is an end-to-end data analysis solution designed to extract critica
 	) AS ranked_categories
 	WHERE rnk = 1;
 ```
-     - Sales performance by time, city, and payment method.
-     - Analyzing peak sales periods and customer buying patterns.
-     - Profit margin analysis by branch and category.
-   - **Documentation**: Keep clear notes of each query's objective, approach, and results.
+- Identify the busiest day from each branch based on the number of transactions.
+	```sql
+ 	SELECT *
+  	FROM
+	 (SELECT 
+	 branch,
+	 date_format(str_to_date(date, '%d/%m/%Y'), '%W') AS day_name,
+	 COUNT(*) as no_of_transactions,
+	 RANK() OVER(
+		PARTITION BY branch
+        ORDER BY COUNT(*) DESC
+		)AS rnk
+	 FROM walmart
+	 GROUP BY 1, 2
+     ) AS sub
+ 	WHERE rnk = 1
+ 	```
+- Calculate the total quantity of items sold per payment method. List the payment_method and total_quantity.
+```sql
+	SELECT 
+	payment_method,
+	-- count(*) as no_payments,
+    sum(quantity) as no_qty_sold
+FROM walmart 
+GROUP BY payment_method;
+```
+  
+- Determine the average, minimum and maximum rating of category of each city. List city, average_rating, min_rating and max_rating.
+```sql
+	SELECT 
+	city,
+    category,
+    MIN(rating) as min_rating,
+    MAX(rating) as max_rating,
+    AVG(rating) as avg_rating
+ FROM walmart
+ GROUP BY 1, 2;
+```
+- Calculate the total profit for each category by considering total_profit as (unit_price * Quantity * Profit_margin). List category and total_profit, order from highest to lower profit.
+```sql
+	SELECT
+	category,
+    SUM(total) as revenue, 
+    SUM(total * profit_margin) as profit
+    FROM walmart
+GROUP BY 1;
+```
+- Determine the most common payment method for each Branch. Display Branch and the preferred_payment_method.
+```sql
+	WITH cte
+AS
+(SELECT
+	branch,
+    payment_method,
+    COUNT(*) as total_trans,
+	RANK() OVER(PARTITION BY branch ORDER BY COUNT(*) DESC) as rnk
+FROM walmart
+GROUP BY 1, 2
+)
+SELECT * 
+FROM cte
+WHERE rnk = 1;
+```
+- Categorize sales into 3 group MORNING, EVENING, AFTERNOON. Find out which of the shift and number of invoices.alter
+```sql
+	SELECT 
+	branch,
+	CASE 
+		WHEN HOUR (`time`) < 12 THEN 'Morning'
+        WHEN HOUR (`time`) BETWEEN 12 AND 17 THEN 'Afternoon'
+        ELSE 'Evening'
+	END day_time,
+    COUNT(*)
+FROM walmart
+GROUP BY 1, 2
+ORDER BY 1, 3 DESC;
+```
 
 ### 10. Project Publishing and Documentation
    - **Documentation**: Maintain well-structured documentation of the entire process in Markdown or a Jupyter Notebook.
