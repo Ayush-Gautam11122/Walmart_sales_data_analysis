@@ -63,7 +63,7 @@ This project is an end-to-end data analysis solution designed to extract critica
     sum(quantity) as no_qty_sold
  FROM walmart GROUP BY payment_method;
    ```
-`	- Identify the highest rated category in each branch, displaying the branch, category, Avg Rating
+- Identify the highest rated category in each branch, displaying the branch, category, Avg Rating
 ```sql
 	SELECT * FROM(
 	SELECT 
