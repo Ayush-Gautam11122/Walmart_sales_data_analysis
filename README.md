@@ -63,8 +63,23 @@ This project is an end-to-end data analysis solution designed to extract critica
     sum(quantity) as no_qty_sold
  FROM walmart GROUP BY payment_method;
    ```
-
-     - Identifying best-selling product categories.
+`	- Identifying best-selling product categories.
+	
+```sql
+	SELECT * FROM(
+	SELECT 
+    branch,
+    category,
+    AVG(rating) AS avg_rating,
+    RANK() OVER (
+        PARTITION BY branch 
+        ORDER BY AVG(rating) DESC
+    ) AS rnk
+	FROM walmart
+	GROUP BY 1, 2
+	) AS ranked_categories
+	WHERE rnk = 1;
+```
      - Sales performance by time, city, and payment method.
      - Analyzing peak sales periods and customer buying patterns.
      - Profit margin analysis by branch and category.
