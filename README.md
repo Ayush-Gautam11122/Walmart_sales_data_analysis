@@ -57,7 +57,7 @@ This project is an end-to-end data analysis solution designed to extract critica
    - **Business Problem-Solving**: Write and execute complex SQL queries to answer critical business questions, such as:
      - Revenue trends across branches and categories.
     
-   ``sql
+   ```sql
      - SELECT payment_method,
 	count(*) as no_payments,
     sum(quantity) as no_qty_sold
